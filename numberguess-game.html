@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Number Guessing Game</title>
+    <!-- font-awesome -->
+   
+    <!-- styles -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="bg-3">
+    <section id="home" class=""">        
+        <div id="gameWrapper">
+            <div id="titleHolder"class="bg-3"style="">
+                <div class="darker-lay"style="border-radius:2.5% 2.5% 0 0;">
+                    <h3 style="text-align:center;padding:0.75em 0.5em 0 0.5em"><text style="font-size:1.3em">ϗ</text>umber Guess Game ֎</h3>
+                    <hr style="margin:-0.1em">
+                </div>
+            </div>
+            <div id="contentHolder"class="">
+
+            </div>
+            <div id="regForm" class="">
+                <div>
+                    <h4 class="pl-3"><text class="text-color-1">■</text>  Guess the golden number <text class="text-warning">ϗ№</text></h4>
+					<p class="text-color-1 d-flex">◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙</p>
+                </div>
+                <form class="pl-3 pr-3 pl-3">
+                    <div>
+                        <label><br><text class="text-color-1">■</text> Username </label>
+                        <div class="d-flex">
+                            <div style="flex:1"><input class="input-1"id="usernameInput"value=""placeholder="type your username here"/></div>
+                            <div><button type="" class="btn-1 bg-3"onclick="setGame('setUsername','1','0');">Start Game</button></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="gameContent" class="d-none">
+                <div class="pl-3 pr-3">
+					<h4>Hi, <text id="usernameWrite"></text><text class="text-gray"style="font-size:1.5em">☻</text> &nbsp Level: <text id="levelWrite"></text> <text class="text-warning"style="font-size:1.35em">♦</text>&nbsp Points: <text id="pointsWrite"></text> <text class="text-success"font-size:1.5em">♣</text></h3>
+					<h4>The golden number is between <text id="rangeWrite"></text></h3>
+					
+				</div>
+				<p class="text-color-1 d-flex">◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙</p>
+                <h3 id="notifyWrite"class="pl-3 pr-3"></h3>
+                <form class="pl-3 pr-3">
+                    <div>
+                        <label><text class="text-color-1">■</text> Your Answer</label>
+                        <div class="d-flex">
+                            <div style="flex:1"><input class="input-1"id="answerInput"value=""placeholder="type your answer here"/></div>
+                            <div><button type="button" class="btn-1 bg-3"onclick="submitAnswer()">Go</button></div>
+                        </div>
+                    </div>
+                </form>
+                <hr>
+                <div class="pl-3 pr-3 pb-3">
+                    <button type="" class="btn-1 bg-white"onclick="clearGameData()">Restart Game</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        var username=sessionStorage.getItem("nguess_username");
+        var contentHolder=document.getElementById("contentHolder"); 
+        var regForm=document.getElementById("regForm"); 
+        var gameContent=document.getElementById("gameContent");
+       authentication();
+        function authentication(){
+            if(!username){ 
+                contentHolder.innerHTML=regForm.innerHTML;
+                regForm.innerHTML='';
+                gameContent.innerHTML='';
+            }else{
+                gameData();
+            }
+        }
+    
+        function gameData(){
+            //get level and points from storage
+            var level=sessionStorage.getItem("nguess_level"); var points=sessionStorage.getItem("nguess_points")
+    
+            //set Answer if not generated
+            var rangeAdd=1; var rangeMin=1; var rangeMax=parseInt(level)+rangeAdd;
+            var correctAnswer=sessionStorage.getItem("nguess_correctAnswer")
+            if(!correctAnswer){
+                var correctAnswer=Math.floor(Math.random()*((rangeMax-rangeMin)+1)+rangeMin);
+                sessionStorage.setItem("nguess_correctAnswer",correctAnswer)
+            }
+    
+            //Display Content and write data to game content
+            contentHolder.innerHTML=gameContent.innerHTML;
+            regForm.innerHTML=''; gameContent.innerHTML='';
+            document.getElementById("usernameWrite").innerHTML=username;
+            document.getElementById("rangeWrite").innerHTML=rangeMin+' and '+rangeMax;  
+            document.getElementById("levelWrite").innerHTML=level;document.getElementById("pointsWrite").innerHTML=points;
+        }
+        
+        //set the username,level and points in starting game and going to next level
+        function setGame(username,level,points){
+            if(username=='setUsername'){
+                var username=document.getElementById("usernameInput").value;
+                level=1;
+            }
+            sessionStorage.setItem("nguess_username",username);  sessionStorage.setItem("nguess_level",level);
+            sessionStorage.setItem("nguess_points",points)
+            window.location.reload();
+        }
+    
+        //triggered from the submit in front end,therefore no correctAnswer parameter for security
+        function submitAnswer(){
+            var level,points,answer,correctAnswer,notify;
+            level=parseInt(sessionStorage.getItem("nguess_level")); 
+            points=parseInt(sessionStorage.getItem("nguess_points"));
+            answer=parseInt(document.getElementById("answerInput").value);
+            correctAnswer=parseInt(sessionStorage.getItem("nguess_correctAnswer"));
+            
+            document.getElementById("notifyWrite").innerHTML='<text style="color:green">▬  </text>';
+            setTimeout(()=>{document.getElementById("notifyWrite").innerHTML='<text style="color:green">▬ ▬ </text>';},"200")
+            setTimeout(()=>{document.getElementById("notifyWrite").innerHTML='<text style="color:green">▬ ▬ ▬ </text>';},"400");
+            
+            setTimeout(()=>{
+            if((answer-correctAnswer)>=5){notify='<text style="color:red">your answer is very high</text>';}else if((answer-correctAnswer)>0){notify='<text style="color:#ffbb33">your answer is a bit higher</text>';}
+            if((answer-correctAnswer)<-5){notify='<text style="color:red">your answer is very low</text>';}else if((answer-correctAnswer)<0){notify='<text style="color:#ffbb33">your answer is a bit lower</text>';}
+            if(answer==correctAnswer){
+                sessionStorage.removeItem("nguess_correctAnswer");
+                notify='<text style="color:#007E33">Smart kid <text style="color:green;font-size:1.5em">☻</text></text>';
+                document.getElementById("notifyWrite").innerHTML=notify;
+                setTimeout(()=>{setGame(username,level+1,points+1)},"1000");
+            }else{
+                document.getElementById("notifyWrite").innerHTML=notify;
+            }},500);
+        
+        }
+    
+         //clear game data for resetting game
+         function clearGameData(){
+            sessionStorage.removeItem("nguess_username");sessionStorage.removeItem("nguess_level");
+            sessionStorage.removeItem("nguess_points"); sessionStorage.removeItem("nguess_correctAnswer")
+            window.location.reload();
+        }
+        
+    
+    </script>
+  </body>
+  
+</html>
+
